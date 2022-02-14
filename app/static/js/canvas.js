@@ -1,7 +1,13 @@
+class TypesEnum {
+    static Veshestvo = 0;
+    static Prepyatstvie = 2;
+    static Poglotitel = -1;
+    static Source = 3;
+}
+
 class CanvasHandler {
     constructor(el) {
-        this.data = [];
-
+        this.data = []; // Данные все
         this.ctx = el.getContext('2d');
         this.statusbar = el.parentElement.querySelector('#status');
 
@@ -20,12 +26,18 @@ class CanvasHandler {
         this.tool = 'pen';
         this.line_width = 1;
 
+
         this._init();
+        this.generateStartData();
         this._setMouseHandlers();
 
         this.setEditorMode('source');
+
     }
 
+    setHistory(){
+        
+    }
     setActiveTool(tool) {
         this.tool = tool;
     }
@@ -87,9 +99,11 @@ class CanvasHandler {
     }
 
     resize(w, h) {
+        this._init();
         this.ctx.canvas.width = parseInt(w);
         this.ctx.canvas.height = parseInt(h);
-        this.clear();
+        this.generateStartData();
+        this._setMouseHandlers();
     }
 
     getWidth() {
@@ -106,11 +120,18 @@ class CanvasHandler {
 
     setData(data) {
         this.data = data;
+        
+    }
+
+    setFrame(){
+
     }
 
     updateData() {
-        let tmp = this.ctx.getImageData(0, 0, this.ctx.canvas.width, this.ctx.canvas.height),
-            row = 0, col = 0, val = 0;
+        let tmp = this.ctx.getImageData(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        let row = 0;
+        let col = 0;
+        let val = 0;
 
         for (let i = 0; i < tmp.data.length; i++) {
             if ((i+1)%4 == 0) { 
@@ -125,9 +146,9 @@ class CanvasHandler {
                     val = tmp.data[i] / 255;
 
                     if (tmp.data[i-3] + tmp.data[i-2] + tmp.data[i-1]) {
-                        val = tmp.data[i-3] > 0 ? 2 : val;
-                        val = tmp.data[i-2] > 0 ? -1 : val;
-                        val = tmp.data[i-1] > 0 ? 3 : val;
+                        val = tmp.data[i-3] > 0 ? TypesEnum.Prepyatstvie : val;
+                        val = tmp.data[i-2] > 0 ? TypesEnum.Poglotitel : val;
+                        val = tmp.data[i-1] > 0 ? TypesEnum.Source : val;
                     } else {
                         val = val == 1 ? this.concentrat : this.data[row][col];
                     }
@@ -146,24 +167,24 @@ class CanvasHandler {
 
         for (let row = 0; row < this.ctx.canvas.height; row++) {
             for (let col = 0; col < this.ctx.canvas.width; col++) {
-                if (data[row][col] == 3) {
+                if (data[row][col] == TypesEnum.Source) { // 3 - Источник - вынести в enum
                     uint8ca.push(0);
                     uint8ca.push(0);
                     uint8ca.push(255);
                     uint8ca.push(255);
-                } else if (data[row][col] == 2) {
+                } else if (data[row][col] == TypesEnum.Prepyatstvie) {
                     uint8ca.push(255);
                     uint8ca.push(0);
                     uint8ca.push(0);
                     uint8ca.push(255);
-                } else if (data[row][col] == -1) {
+                } else if (data[row][col] == TypesEnum.Poglotitel) {
                     uint8ca.push(0);
                     uint8ca.push(128);
                     uint8ca.push(0);
                     uint8ca.push(255);
-                } else {
-                    for (let n = 0; n < 3; n++) uint8ca.push(0);
-                    uint8ca.push(data[row][col]*255);
+                } else{
+                     for (let n = 0; n < 3; n++) uint8ca.push(0);
+                     uint8ca.push(data[row][col]*255);
                 }
             }
         }
@@ -180,27 +201,26 @@ class CanvasHandler {
         uint8ca = null;
     }
 
-    updateStatusBar(mouseVal) {
+        updateStatusBar(mouseVal) {
         switch (mouseVal) {
-            case 3:
+            case TypesEnum.Source:
                 this.statusbar.textContent = `x=${this.currPos.X}, y=${this.currPos.Y}, Постоянный источник(D=1)`;
                 break;
-            case 2:
+            case TypesEnum.Prepyatstvie:
                 this.statusbar.textContent = `x=${this.currPos.X}, y=${this.currPos.Y}, Препятствие`;
                 break;
-            case -1:
+            case TypesEnum.Poglotitel:
                 this.statusbar.textContent = `x=${this.currPos.X}, y=${this.currPos.Y}, Поглотитель(D=0)`;
                 break;
-        
-            default:
+            case TypesEnum.Veshestvo:
                 this.statusbar.textContent = `x=${this.currPos.X}, y=${this.currPos.Y}, D=${mouseVal.toFixed(6)}`;
                 break;
         }
     }
 
     _init() {
+        $( "#canvas" ).unbind();
         this.clear();
-        this.generateStartData();
     }
 
     generateStartData() {
@@ -219,13 +239,16 @@ class CanvasHandler {
 
             this.currPos.X = ~~(e.clientX - rect.left);
             this.currPos.Y = ~~(e.clientY - rect.top);
-
-            this.updateStatusBar(this.data[this.currPos.Y][this.currPos.X]);
+            if (!this.currPos){
+                this.currPos = {X: 0, Y: 0};
+            }
+            this.data && this.updateStatusBar(this.data[this.currPos.Y][this.currPos.X]);
         });
         
         this.ctx.canvas.addEventListener('mousemove', (e) => {
-            if (!this.shiftDown && this.isMouseDown) this.mouseDrawing();
-                
+            if (!this.shiftDown && this.isMouseDown){
+                this.mouseDrawing();
+            } 
             this.prevPos.X = this.currPos.X;
             this.prevPos.Y = this.currPos.Y;
         });
@@ -278,7 +301,7 @@ class CanvasHandler {
         if (this.tool != 'eraser') {
             this.ctx.globalCompositeOperation = 'source-over';
         }
-
+        console.log(this.tool);
         switch (this.tool) {
             case 'pen':
                 this.ctx.moveTo(this.prevPos.X, this.prevPos.Y);
@@ -368,3 +391,4 @@ class CanvasHandler {
         return  Math.sqrt((this.currPos.X - this.startPos.X)**2 + (this.currPos.Y - this.startPos.Y)**2);
     }
 }
+
