@@ -4,7 +4,7 @@ class App {
         this.model = new Model();
         this.editor = editorBlock;
         this.form = formEl;
-       
+        this.history = [];
         this.timeinfobar = canvasEl.parentElement.querySelector('#timeinfo');
  
         this.steps = 100;
@@ -26,6 +26,7 @@ class App {
     }
  
     start() {
+        this.history = [];
         this._setModel();
         if (!this._isStoped) {
             if (this._validateForm()) {
@@ -56,6 +57,10 @@ class App {
     stop() {
         cancelAnimationFrame(this.raf);
         this._isStoped = true;
+        debugger;
+        console.log(this.history);
+        this.canvas.setData(this.history[0]);
+        this.canvas.updateData();
     }
  
     reset() {
@@ -308,6 +313,7 @@ class App {
             if (this.tick % 3 == 0 || this.tick == this.steps-1) {
                 this.model.proccess(true);
                 this.canvas.draw(this.model.uint8ca);
+                
             } else {
                 this.model.proccess();
             }
@@ -318,7 +324,13 @@ class App {
            
             this.updateInfobar();
             this.tick++;
- 
+            const tmp = this.canvas.getData();
+            const copy = [];
+            for (let item of tmp){
+                copy.push([...item]);
+            }
+            this.history.push([...copy]);
+            
             this._tick();
         });
     }
