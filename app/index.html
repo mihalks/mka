@@ -21,6 +21,7 @@
         
         <section class="container">
             <div class="row">
+                
                 <div class="col-sm-3 p-3 bd-highlight">
                     <form id="startForm" name="Start"> 
         
@@ -81,9 +82,11 @@
                 <!-- Контейнер для холста рисования -->
                 <div class="col-sm-6">
                     <div class="p-3 mt-5 bd-highlight">
-                        <canvas id="canvas" width="500" height="500" data-toggle="tooltip" data-placement="top"></canvas>
+                        <canvas id="canvas" width="500" height="500" data-toggle="tooltip" data-placement="top" ></canvas>
                         <div class="alert alert-info p-2 mb-1" id="status">x=13, y=301, D=0.000000</div>
                         <div class="alert alert-info p-2 mb-1" id="timeinfo">Шаг: 0 | Время: 0c</div>
+                        <button id="undo">Назад</button>
+                        <iframe src='https://cdn.knightlab.com/libs/timeline3/latest/embed/index.html?source=1-D3JG-rh55UadQU8ERlW9TGuNGfR2VQZggXQFKvcEBw&font=Default&lang=en&initial_zoom=2&height=650' width='100%' height='650' webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder='0'></iframe>
                     </div>
                     <!-- <div class="m-4">
                         <video style="border:1px solid #222" src="" id="video" controls="true" autoplay></video>
@@ -98,7 +101,7 @@
                                     <input id="pen" type="radio" name="tool" value="pen" checked> Ручка
                                 </label>
                                 <label for="line" class="btn btn-secondary btn-sm">
-                                    <input id="line" type="radio" name="tool" value="line"> Ластик
+                                    <input id="line" type="radio" name="tool" value="line"> Линия
                                 </label>
                                 <label for="eraser" class="btn btn-secondary btn-sm">
                                     <input id="eraser" type="radio" name="tool" value="eraser"> Ластик
@@ -171,7 +174,6 @@
                             
                             <button type="button" id="resize" class="btn btn-primary btn-sm btn-block">Изменить размер холста</button>
                             <button type="button" id="clear" class="btn btn-secondary btn-sm btn-block">Очистить изображение</button>
-    
                             
                         </div>
                     </form>
@@ -190,10 +192,12 @@
     </section>
     <footer></footer>
     
+    
     <script src="./static/js/chart.min.js"></script>
     <script src="./static/js/model.js"></script>
     <script src="./static/js/canvas.js"></script>
     <script src="./static/js/app.js"></script>
     <script src="./static/js/index.js"></script>
+    <!-- <script src="./static/js/undo.js"></script> -->
 </body>
 </html>
