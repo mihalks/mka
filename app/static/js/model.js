@@ -1,3 +1,15 @@
+class TypesEnum {
+    static Veshestvo = 0;
+    static Prepyatstvie = 2;
+    static Poglotitel = -1;
+    static Source = 3;
+}
+class Cell {
+    constructor() {
+    // type
+    // value 
+    }
+}
 class Model {
     constructor() {
         this.data = [];
@@ -14,6 +26,9 @@ class Model {
 
     calcA() {
         this.A = this.D * (this.dt / this.h**2);
+        //            Ci-1,j(t) - Ci,j(t)
+        // J1(tk) = D--------------------
+        //                   h^2
     }
 
     set_D(D) {
@@ -57,7 +72,7 @@ class Model {
         for(let i = 0; i < this.height; i++) {
             for(let j = 0; j < this.width; j++) {
                 
-                if (buffer[i][j] >= 0 && buffer[i][j] <= 1) {
+                if (buffer[i][j] >= 0 && buffer[i][j] <= 1) { // ?
 
                     siblings = 4;
                     
@@ -66,25 +81,53 @@ class Model {
 
                     dLeft = j > 0 ? buffer[i][j-1] : 0; 
                     dRight = j < this.width - 1 ? buffer[i][j+1] : 0;
+
+                    dLeft = dLeft == TypesEnum.Prepyatstvie ? 0 : dLeft;
+                    dRight = dRight == TypesEnum.Prepyatstvie ? 0 : dRight;
+                    dTop = dTop == TypesEnum.Prepyatstvie ? 0 : dTop;
+                    dBottom = dBottom == TypesEnum.Prepyatstvie ? 0 : dBottom;
+
+                    dLeft = dLeft == TypesEnum.Source ? 1 : dLeft; // ?
+                    dRight = dRight == TypesEnum.Source ? 1 : dRight;
+                    dTop = dTop == TypesEnum.Source ? 1 : dTop;
+                    dBottom = dBottom == TypesEnum.Source ? 1 : dBottom;
+
+                    siblings = !dLeft  ? siblings-1 : siblings; // добавить отдельный случай для препятствий
+                    siblings = !dRight ? siblings-1 : siblings; // ? надо будет проверить
+                    siblings = !dTop ? siblings-1 : siblings; 
+                    siblings = !dBottom ? siblings-1 : siblings;
+
+                    dLeft = dLeft == TypesEnum.Poglotitel ? 0 : dLeft;
+                    dRight = dRight == TypesEnum.Poglotitel ? 0 : dRight;
+                    dTop = dTop == TypesEnum.Poglotitel ? 0 : dTop;
+                    dBottom = dBottom == TypesEnum.Poglotitel ? 0 : dBottom;
+                    //  0 0 0
+                    //0 1 # # 0
+                    //0 # # # 0
+                    //0 # # # 0
+                    //  0 0 0 
                     
-                    dLeft = dLeft == 2 ? 0 : dLeft;
-                    dRight = dRight == 2 ? 0 : dRight;
-                    dTop = dTop == 2 ? 0 : dTop;
-                    dBottom = dBottom == 2 ? 0 : dBottom;
+                    //  0 0 0
+                    //0 # 0 # 0
+                    //0 0 1 0 0
+                    //0 # 0 # 0
+                    //  0 0 0 
 
-                    dLeft = dLeft == 3 ? 1 : dLeft;
-                    dRight = dRight == 3 ? 1 : dRight;
-                    dTop = dTop == 3 ? 1 : dTop;
-                    dBottom = dBottom == 3 ? 1 : dBottom;
 
-                    siblings = !dLeft || !dRight ? siblings-1 : siblings;
-                    siblings = !dTop || !dBottom ? siblings-1 : siblings;
+                    // this.A = this.D * (this.dt / this.h**2);
+                    //            Ci-1,j(t) - Ci,j(t)
+                    // J1(tk) = D--------------------
+                    //                   h^2
+                    // SUMM J = J1 - J2 + J3 - J4
 
-                    dLeft = dLeft == -1 ? 0 : dLeft;
-                    dRight = dRight == -1 ? 0 : dRight;
-                    dTop = dTop == -1 ? 0 : dTop;
-                    dBottom = dBottom == -1 ? 0 : dBottom;
-                    
+                    // SUMM J = D*dt/h^2(  (Ci-1,j(t) - Ci,j(t)) -  (Ci,j(t) - Ci+1,j(t)) +  (Ci,j-1(t) - Ci,j(t)) - (Ci,j(t) - Ci,j+1(t)) )
+                    // SUMM J = D*dt/h^2(  Ci-1,j(t) - Ci,j(t) -  Ci,j(t) + Ci+1,j(t) +  Ci,j-1(t) - Ci,j(t) - Ci,j(t) + Ci,j+1(t) )
+                    // SUMM J = D*dt/h^2(  Ci-1,j(t) + Ci+1,j(t) + Ci,j-1(t) + Ci,j+1(t) - 4* Ci,j(t))
+
+                    // Ci,j(tk+1) = Ci,j(tk) + SUM Ji,j
+
+
+                    // Ci,j(tk+1)      Ci,j(tk)      
                     this.data[i][j] = buffer[i][j] + this.A*(dLeft + dRight + dBottom + dTop - siblings*buffer[i][j]);
                 }
 

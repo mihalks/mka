@@ -1,0 +1,6 @@
+{
+    "files.exclude": {
+        "app": true,
+        "core": true,
+    }
+}
