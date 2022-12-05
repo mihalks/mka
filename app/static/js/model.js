@@ -1,4 +1,4 @@
-class TypesEnum {
+class Types {
     static Veshestvo = 0;
     static Prepyatstvie = 2;
     static Poglotitel = -1;
@@ -82,25 +82,25 @@ class Model {
                     dLeft = j > 0 ? buffer[i][j-1] : 0; 
                     dRight = j < this.width - 1 ? buffer[i][j+1] : 0;
 
-                    dLeft = dLeft == TypesEnum.Prepyatstvie ? 0 : dLeft;
-                    dRight = dRight == TypesEnum.Prepyatstvie ? 0 : dRight;
-                    dTop = dTop == TypesEnum.Prepyatstvie ? 0 : dTop;
-                    dBottom = dBottom == TypesEnum.Prepyatstvie ? 0 : dBottom;
+                    dLeft = dLeft == Types.Prepyatstvie ? 0 : dLeft;
+                    dRight = dRight == Types.Prepyatstvie ? 0 : dRight;
+                    dTop = dTop == Types.Prepyatstvie ? 0 : dTop;
+                    dBottom = dBottom == Types.Prepyatstvie ? 0 : dBottom;
 
-                    dLeft = dLeft == TypesEnum.Source ? 1 : dLeft; // ?
-                    dRight = dRight == TypesEnum.Source ? 1 : dRight;
-                    dTop = dTop == TypesEnum.Source ? 1 : dTop;
-                    dBottom = dBottom == TypesEnum.Source ? 1 : dBottom;
+                    dLeft = dLeft == Types.Source ? 1 : dLeft; // ?
+                    dRight = dRight == Types.Source ? 1 : dRight;
+                    dTop = dTop == Types.Source ? 1 : dTop;
+                    dBottom = dBottom == Types.Source ? 1 : dBottom;
 
                     siblings = !dLeft  ? siblings-1 : siblings; // добавить отдельный случай для препятствий
                     siblings = !dRight ? siblings-1 : siblings; // ? надо будет проверить
                     siblings = !dTop ? siblings-1 : siblings; 
                     siblings = !dBottom ? siblings-1 : siblings;
 
-                    dLeft = dLeft == TypesEnum.Poglotitel ? 0 : dLeft;
-                    dRight = dRight == TypesEnum.Poglotitel ? 0 : dRight;
-                    dTop = dTop == TypesEnum.Poglotitel ? 0 : dTop;
-                    dBottom = dBottom == TypesEnum.Poglotitel ? 0 : dBottom;
+                    dLeft = dLeft == Types.Poglotitel ? 0 : dLeft;
+                    dRight = dRight == Types.Poglotitel ? 0 : dRight;
+                    dTop = dTop == Types.Poglotitel ? 0 : dTop;
+                    dBottom = dBottom == Types.Poglotitel ? 0 : dBottom;
                     //  0 0 0
                     //0 1 # # 0
                     //0 # # # 0
@@ -132,17 +132,17 @@ class Model {
                 }
 
                 if (updateCanvas) {
-                    if (this.data[i][j] == 3) {
+                    if (this.data[i][j] == Types.Source) {
                         this.uint8ca.push(0);
                         this.uint8ca.push(0);
                         this.uint8ca.push(255);
                         this.uint8ca.push(255);
-                    } else if (this.data[i][j] == 2) {
+                    } else if (this.data[i][j] == Types.Prepyatstvie) {
                         this.uint8ca.push(255);
                         this.uint8ca.push(0);
                         this.uint8ca.push(0);
                         this.uint8ca.push(255);
-                    } else if (this.data[i][j] == -1) {
+                    } else if (this.data[i][j] == Types.Poglotitel) {
                         this.uint8ca.push(0);
                         this.uint8ca.push(128);
                         this.uint8ca.push(0);
