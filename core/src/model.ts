@@ -2,31 +2,34 @@ import { Cell } from './cell';
 import { Types } from './types';
 
 export class Model {
-  data: Cell[][];
-  D: number;
+  d: number;
   h: number;
   dt: number;
-  A: number;
+  a: number;
 
   constructor() {
-    this.data = [];
-    // this.width = 100;
-    // this.height = 100;
-    this.D = 0.000001;
+    this.d = 0.000001;
     this.h = 0.002;
     this.dt = 0.1;
-    this.A = this.calcA();
+    this.a = this.calcA();
   }
 
   private calcA(): number {
-    return this.D * (this.dt / this.h ** 2);
+    return this.d * (this.dt / this.h ** 2);
     //            Ci-1,j(t) - Ci,j(t)
     // J1(tk) = D--------------------
     //                   h^2
   }
 
-  proccess(data: Cell[][]) {
-    let buffer = data.slice();
+  proccess(data: Cell[][]): Cell[][] {
+    const result: Cell[][] = [];
+    // Make as separate copy function
+    for (const i in data) {
+      result.push([]);
+      for (const j in data[i]) {
+        result[i].push({ ...data[i][j] });
+      }
+    }
     let dLeft: Cell;
     let dRight: Cell;
     let dBottom: Cell;
@@ -39,36 +42,21 @@ export class Model {
 
     for (let i = 0; i < height; i++) {
       for (let j = 0; j < width; j++) {
-        if (buffer[i][j].cellType === Types.Veshestvo) {
+        if (data[i][j].cellType === Types.Veshestvo) {
           // ?
 
           let siblings = 4;
 
-          dTop = i > 0 ? buffer[i - 1][j] : { cellType: Types.Prepyatstvie, value: 0 };
-          dBottom = i < height - 1 ? buffer[i + 1][j] : { cellType: Types.Prepyatstvie, value: 0 };
+          dTop = i > 0 ? { ...data[i - 1][j] } : { cellType: Types.Prepyatstvie, value: 0 };
+          dBottom = i < height - 1 ? { ...data[i + 1][j] } : { cellType: Types.Prepyatstvie, value: 0 };
 
-          dLeft = j > 0 ? buffer[i][j - 1] : { cellType: Types.Prepyatstvie, value: 0 };
-          dRight = j < width - 1 ? buffer[i][j + 1] : { cellType: Types.Prepyatstvie, value: 0 };
-
-          //   dLeft = dLeft == Types.Prepyatstvie ? 0 : dLeft;
-          //   dRight = dRight == Types.Prepyatstvie ? 0 : dRight;
-          //   dTop = dTop == Types.Prepyatstvie ? 0 : dTop;
-          //   dBottom = dBottom == Types.Prepyatstvie ? 0 : dBottom;
-
-          //   dLeft = dLeft == Types.Source ? 1 : dLeft; // ?
-          //   dRight = dRight == Types.Source ? 1 : dRight;
-          //   dTop = dTop == Types.Source ? 1 : dTop;
-          //   dBottom = dBottom == Types.Source ? 1 : dBottom;
+          dLeft = j > 0 ? { ...data[i][j - 1] } : { cellType: Types.Prepyatstvie, value: 0 };
+          dRight = j < width - 1 ? { ...data[i][j + 1] } : { cellType: Types.Prepyatstvie, value: 0 };
 
           siblings = dLeft.cellType === Types.Prepyatstvie ? siblings - 1 : siblings; // добавить отдельный случай для препятствий
           siblings = dTop.cellType === Types.Prepyatstvie ? siblings - 1 : siblings; // ? надо будет проверить
           siblings = dRight.cellType === Types.Prepyatstvie ? siblings - 1 : siblings;
           siblings = dBottom.cellType === Types.Prepyatstvie ? siblings - 1 : siblings;
-
-          //   dLeft = dLeft == Types.Poglotitel ? 0 : dLeft;
-          //   dRight = dRight == Types.Poglotitel ? 0 : dRight;
-          //   dTop = dTop == Types.Poglotitel ? 0 : dTop;
-          //   dBottom = dBottom == Types.Poglotitel ? 0 : dBottom;
 
           // this.A = this.D * (this.dt / this.h**2);
           //            Ci-1,j(t) - Ci,j(t)
@@ -82,9 +70,10 @@ export class Model {
           // Ci,j(tk+1) = Ci,j(tk) + SUM Ji,j1
 
           // Ci,j(tk+1)      Ci,j(tk)
-          data[i][j].value =
-            buffer[i][j].value +
-            this.A * (dLeft.value + dRight.value + dBottom.value + dTop.value - siblings * buffer[i][j].value);
+          const value =
+            data[i][j].value +
+            this.a * (dLeft.value + dRight.value + dBottom.value + dTop.value - siblings * data[i][j].value);
+          result[i][j].value = value >= 0 ? value : 0;
         }
       }
     }
@@ -93,6 +82,6 @@ export class Model {
     dRight = null;
     dTop = null;
     dBottom = null;
-    buffer = null;
+    return result;
   }
 }
