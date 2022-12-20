@@ -1,18 +1,22 @@
 {
 	"folders": [
-		{
-			"name": "Configs (Root)",
-			"path": "."
-		},
-		{
-			"name": "App",
-			"path": "app"
-		},
         {
-			"name": "Core",
-			"path": "core"
-		},
-	],
+            "name": "Configs (Root)",
+            "path": "."
+        },
+        {
+            "name": "App",
+            "path": "app"
+        },
+        {
+            "name": "Core",
+            "path": "core"
+        },
+        {
+            "name": "Client",
+            "path": "client"
+        }
+    ],
 	"settings": {
 		"files.exclude": {
 			"**/.git": true,
