@@ -1,38 +1,186 @@
-.App {
-  text-align: center;
-}
+/* Copyright (c) 2021 Ivan Teplov */
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+/* Reset styles */
+* {
+    margin: 0;
+    padding: 0;
   }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+  
+  html,
+  body {
+    height: 100%;
   }
-  to {
-    transform: rotate(360deg);
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  
+    background-color: var(--background);
+    color: var(--foreground);
+  
+    -webkit-tap-highlight-color: transparent;
+  
+    overscroll-behavior: none;
+  
+    --background: #eee;
+    --foreground: #000;
+    --canvas-background: #fff;
+    --primary: rgb(66, 127, 240);
+    --primary-darken: rgb(41, 108, 235);
+    --shadow: #bbb;
   }
-}
+  
+  @media (prefers-color-scheme: dark) {
+    body {
+      --background: rgb(8, 8, 22);
+      --foreground: #e5e5e5;
+      --canvas-background: #000;
+      --shadow: rgb(14, 13, 26);
+    }
+  }
+  
+  button {
+    background-color: var(--primary);
+    color: var(--background);
+  
+    transition: background-color 0.2s;
+  
+    border-radius: 5px;
+    border: none;
+    outline: none;
+  
+    font: inherit;
+    cursor: pointer;
+  
+    padding: 0.25rem 0.5rem;
+  }
+  
+  button:hover,
+  button:focus {
+    background-color: var(--primary-darken);
+  }
+  
+  /* Flexbox */
+  
+  .column,
+  .row {
+    display: flex;
+  }
+  
+  .column > *,
+  .row > * {
+    flex: 0;
+  }
+  
+  .column {
+    flex-direction: column;
+  }
+  
+  .fill {
+    flex: 1;
+  }
+  
+  .wrap {
+    flex-wrap: wrap;
+  }
+  
+  /* App styles */
+  .App {
+    height: 100%;
+    justify-content: space-around;
+  }
+  
+  .Toolbar {
+    justify-content: center;
+    padding: 1rem;
+    padding-bottom: 0;
+    gap: 1rem;
+  
+    user-select: none;
+  }
+  
+  @media (max-width: 800px) {
+    .Toolbar {
+      justify-content: flex-start;
+      padding: 1rem;
+      overflow-x: scroll;
+      flex-basis: auto;
+      box-sizing: border-box;
+    }
+  }
+  
+  canvas {
+    display: block;
+  
+    max-width: calc(100% - 2rem);
+    margin: 1rem;
+  }
+  
+  canvas,
+  .ToolbarSection {
+    background-color: var(--canvas-background);
+    box-shadow: 0 2px 5px var(--shadow);
+    border-radius: 5px;
+  }
+  
+  .ToolbarSection {
+    padding: 1rem;
+  }
+  
+  .ToolbarSection h2 {
+    margin-bottom: 0.5rem;
+  }
+  
+  .ToolbarSection .buttonWrapper {
+    gap: 0.5rem;
+  }
+  
+  .BrushColorButton,
+  .BrushSizeButton {
+    transition: box-shadow 0.2s;
+  }
+  
+  .BrushColorButton {
+    background-color: transparent;
+    padding: 0;
+  }
+  
+  .BrushColorButton > span {
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 5px;
+  }
+  
+  .BrushSizeButton {
+    background-color: transparent;
+  
+    padding: 0.25rem 0;
+    width: 1.5rem;
+    flex-basis: 1.5rem;
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .BrushSizeButton > span {
+    display: block;
+    height: 1.5rem;
+    border-radius: 5px;
+    background-color: var(--foreground);
+  }
+  
+  .BrushColorButton:hover,
+  .BrushColorButton:focus,
+  .BrushColorButton.active,
+  .BrushSizeButton:hover,
+  .BrushSizeButton:focus,
+  .BrushSizeButton.active {
+    background-color: transparent;
+    box-shadow: 0 3px 5px var(--shadow);
+  }
+  
