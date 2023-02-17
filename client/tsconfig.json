@@ -23,5 +23,5 @@
   },
   "include": [
     "src"
-, "src/Panels/Lesrc/Panels/CenterP.tsxCenterP.tsx", "RightP.tsx"  ]
+, "src/components/Lesrc/Panels/CenterP.tsxCenterP.tsx", "RightP.tsx"  ]
 }

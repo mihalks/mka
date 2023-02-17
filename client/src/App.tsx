@@ -1,13 +1,13 @@
 // Copyright (c) 2021 Ivan Teplov
 
-import { brushSizes, BrushSizeButton } from './BrushSizeButton'
-import { brushColors, BrushColorButton } from './BrushColorButton'
+import { brushSizes, BrushSizeButton } from './components/BrushSizeButton'
+import { brushColors, BrushColorButton } from './components/BrushColorButton'
 import { useEffect, useRef, useState } from 'react'
-import { getTouchPosition } from './getTouchPosition'
+import { getTouchPosition } from './components/getTouchPosition'
 
-import MouseOrTouchEvent from './MouseOrTouchEvent'
-import ToolbarSection from './ToolbarSection'
-import downloadFile from './downloadFile'
+import MouseOrTouchEvent from './components/MouseOrTouchEvent'
+import ToolbarSection from './components/ToolbarSection'
+import downloadFile from './components/downloadFile'
 
 import './App.css'
 
@@ -17,7 +17,7 @@ export default function App() {
   // Current brush size
   let [currentSize, setCurrentSize] = useState(brushSizes['Extra Large'])
   // Current brush color
-  let [currentColor, setCurrentColor] = useState(brushColors.Blue)
+  let [currentColor, setCurrentColor] = useState(brushColors.Substance)
   let isDrawing = false
 
   // Called when the user starts touching the canvas
@@ -140,16 +140,16 @@ export default function App() {
   return (
     <div className="App column fill">
       <div className="Toolbar row">
-        <ToolbarSection title="Painting">
+        <ToolbarSection title="Начальные параметры">
           <button type="button" onClick={saveCanvas}>
-            Save
+            Сохранить
           </button>
           <button type="button" onClick={clearCanvas}>
-            Clear
+            Очистить
           </button>
         </ToolbarSection>
 
-        <ToolbarSection title="Brush size">
+        <ToolbarSection title="Размер кисти">
           {/* Buttons to select brush size */}
           {Object.entries(brushSizes).map(([sizeName, size]) => (
             <BrushSizeButton
@@ -161,7 +161,7 @@ export default function App() {
           ))}
         </ToolbarSection>
 
-        <ToolbarSection title="Brush color">
+        <ToolbarSection title="Тип вещества">
           {Object.entries(brushColors).map(([colorName, color]) => (
             <BrushColorButton
               key={colorName}
