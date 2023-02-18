@@ -1,7 +1,7 @@
 // Copyright (c) 2021 Ivan Teplov
 
 import { brushSizes, BrushSizeButton } from './components/BrushSizeButton'
-import { brushColors, BrushColorButton } from './components/BrushColorButton'
+import { brushColors, BrushColorButton, Color } from './components/BrushColorButton'
 import { useEffect, useRef, useState } from 'react'
 import { getTouchPosition } from './components/getTouchPosition'
 
@@ -10,6 +10,26 @@ import ToolbarSection from './components/ToolbarSection'
 import downloadFile from './components/downloadFile'
 
 import './App.css'
+
+const colors: Array<Color> = [
+    {
+        color: '#000',
+        title: "Вещество" 
+    },
+    {
+        color: '#dd2a2a',
+        title: "Барьер" 
+    },
+    {
+        color: '#129d12',
+        title: "Поглотитель" 
+    }, 
+    {
+        color: '#2875d5',
+        title: "Источник" 
+    }
+]
+
 
 export default function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -162,12 +182,12 @@ export default function App() {
         </ToolbarSection>
 
         <ToolbarSection title="Тип вещества">
-          {Object.entries(brushColors).map(([colorName, color]) => (
+          {colors.map((item: Color) => (
             <BrushColorButton
-              key={colorName}
-              onClick={() => setCurrentColor(color)}
-              className={color === currentColor ? 'active' : ''}
-              brushColor={colorName}
+              key={item.title}
+              onClick={() => setCurrentColor(item.color)}
+              className={item.color === currentColor ? 'active' : ''}
+              brushColor={item}
             />
           ))}
         </ToolbarSection>

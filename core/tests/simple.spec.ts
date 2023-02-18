@@ -33,11 +33,11 @@ describe('Проверка 1 шага распространения', () => {
     //   0 0 0
 
     // Expected
-    //  0 0 0
+    //  0      0     0
     // 0 3     0.025 # 0
     // 0 0.025 #     # 0
     // 0 #     #     # 0
-    //  0 0 0
+    //  0      0     0
     grid[0][0] = { cellType: Types.Source, value: 1 };
 
     const expected: Cell[][] = [
