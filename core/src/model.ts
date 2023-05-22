@@ -30,10 +30,10 @@ export class Model {
         result[i].push({ ...data[i][j] });
       }
     }
-    let dLeft: Cell;
-    let dRight: Cell;
-    let dBottom: Cell;
-    let dTop: Cell;
+    let dLeft: Cell | null;
+    let dRight: Cell | null;
+    let dBottom: Cell | null;
+    let dTop: Cell | null;
     const height = data.length;
     if (height === 0) {
       return [];
