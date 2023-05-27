@@ -1,12 +1,14 @@
+import { Cell } from '@core/cell';
+import { Types } from '@core/types';
 import React, { useEffect, useState } from 'react';
 import { Stage, Layer, Line, Rect } from 'react-konva';
 
 interface MyCanvasProps {
-  matrix: number[][];
+  grid: Cell[][];
   pixelSize: number;
 }
 
-const MyCanvas: React.FC<MyCanvasProps> = ({matrix, pixelSize}) => {
+const MyCanvas: React.FC<MyCanvasProps> = ({grid, pixelSize}) => {
   const [lines, setLines] = useState<Array<{ tool: string; points: any[]; }>>([]);
   const [isDrawing, setIsDrawing] = useState(false);
   const [tool, setTool] = React.useState('pen');
@@ -17,16 +19,19 @@ const MyCanvas: React.FC<MyCanvasProps> = ({matrix, pixelSize}) => {
   const generatePixels = () => {
     const newPixels: Array<JSX.Element> = [];
 
-    for (let y = 0; y < matrix.length; y++) {
-      for (let x = 0; x < matrix[y].length; x++) {
-        const value = matrix[y][x];
-        let color = 'blue';
-
-        // Assign color based on matrix value
-        if (value === 1) {
+    for (let y = 0; y < grid.length; y++) {
+      for (let x = 0; x < grid[y].length; x++) {
+        const cell = grid[y][x];
+        let color = 'transparent';
+        // Assign color based on cell type
+        if (cell.cellType === Types.Source) {
+          color = 'blue';
+        } else if (cell.cellType === Types.Prepyatstvie) {
           color = 'red';
-        } else if (value === 2) {
-          color = 'green';
+        } else if (cell.cellType === Types.Veshestvo) {
+          // Interpolate the color based on the value (0 to 1)
+          const intensity = Math.floor(cell.value * 255);
+          color = `rgba(${intensity}, ${intensity}, ${intensity}, 1)`;
         }
 
         // Create the pixel rectangle
@@ -52,7 +57,7 @@ const MyCanvas: React.FC<MyCanvasProps> = ({matrix, pixelSize}) => {
     // Generate pixels when the component mounts or when matrix or pixelSize changes
   useEffect(() => {
     generatePixels();
-  }, [matrix, pixelSize]);
+  }, [grid, pixelSize]);
 
 
 

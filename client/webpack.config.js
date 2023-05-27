@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const TsConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 const {
   NODE_ENV,
@@ -23,7 +24,8 @@ module.exports = {
   },
 
   resolve: {
-    extensions: [".ts", ".tsx", ".js", ".json"]
+    extensions: [".ts", ".tsx", ".js", ".json"],
+    plugins: [new TsConfigPathsPlugin()]
   },
 
   module: {
@@ -34,6 +36,7 @@ module.exports = {
           {
             loader: 'ts-loader',
             options: {
+              projectReferences: true,
               compilerOptions: {noEmit: false},
             }
           }
@@ -76,23 +79,23 @@ module.exports = {
 
   devServer: {
     allowedHosts: [
-      SERVER_HOST,
+    //   SERVER_HOST,
       'localhost',
     ],
     historyApiFallback: true,
     open: true,
     hot: true,
-    host: SERVER_WEB_HOST,
-    port: SERVER_WEB_PORT,
-    proxy: {
-      '/api': proxy,
-      '/acc': proxy,
-      '/auth': proxy,
-      '/socket.io': {
-        target: proxy,
-        ws: true
-      },
-      '/images': proxy
-    }
+    // host: SERVER_WEB_HOST,
+    // port: SERVER_WEB_PORT,
+    // proxy: {
+    //   '/api': proxy,
+    //   '/acc': proxy,
+    //   '/auth': proxy,
+    //   '/socket.io': {
+    //     target: proxy,
+    //     ws: true
+    //   },
+    //   '/images': proxy
+    // }
   }
 };
