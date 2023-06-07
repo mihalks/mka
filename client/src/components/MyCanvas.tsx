@@ -28,9 +28,11 @@ const MyCanvas: React.FC<MyCanvasProps> = ({grid, pixelSize}) => {
           color = 'blue';
         } else if (cell.cellType === Types.Prepyatstvie) {
           color = 'red';
+        } else if (cell.cellType === Types.Poglotitel) {
+          color = 'green';
         } else if (cell.cellType === Types.Veshestvo) {
           // Interpolate the color based on the value (0 to 1)
-          const intensity = Math.floor(cell.value * 255);
+          const intensity = 255 - Math.floor(cell.value * 255);
           color = `rgba(${intensity}, ${intensity}, ${intensity}, 1)`;
         }
 
