@@ -1,6 +1,8 @@
 {
     "compilerOptions": {
-    "target": "es5",
+    "declaration": true,
+    "outDir": "./dist",
+    "target": "es6",
     "allowJs": true,
     "sourceMap": true,
     "skipLibCheck": true,
@@ -13,7 +15,8 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
-        "types": ["jest", "node"]
-    }
+    "types": ["jest", "node"],
+    "composite": true,
+    },
+    "exclude": ["tests"]
 }

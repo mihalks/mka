@@ -1,10 +1,22 @@
 {
+        "references": [
+        { "path": "../core" }
+    ],
   "compilerOptions": {
+    "baseUrl": ".",
     "target": "es5",
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
+    ],
+    "paths": {
+        "@core/*": [
+            "../core/src/*"
+        ],
+    },
+    "rootDirs": [
+        "./src"
     ],
     "allowJs": true,
     "sourceMap": true,
@@ -19,9 +31,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
   },
-  "include": [
-    "src"
-, "src/components/Lesrc/Panels/CenterP.tsxCenterP.tsx", "RightP.tsx"  ]
+     "include": [
+        "src"
+    ]
 }
